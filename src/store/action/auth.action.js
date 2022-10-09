@@ -78,7 +78,7 @@ export const loginUser = (data) => {
     axios.defaults.headers.post["Content-Type"] =
       "application/json;charset=utf-8";
     axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
-    return axios("/oauth/sign_in", {
+    return axios("http://pretest-qa.dcidev.id/api/v1/oauth/sign_in", {
       method: "POST",
       data,
     })
