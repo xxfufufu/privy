@@ -5,6 +5,8 @@ import {
   editExperienceUser,
   editProfileUser,
   getDataUser,
+  imageAsProfile,
+  imageDelete,
   uploadImageBanner,
   uploadImageProfile,
 } from "../../store/action";
@@ -16,6 +18,7 @@ import {
   Education,
   ModalExperience,
   ModalEducation,
+  ModalImage,
 } from "./components";
 import { CogIcon } from "@heroicons/react/solid";
 import { ModalEditProfile } from "./components/ModalEditProfile";
@@ -27,6 +30,8 @@ const Home = () => {
   const [isModalExperience, setIsModalExperience] = useState(false);
   const [isModalEducation, setIsModalEducation] = useState(false);
   const [isModalProfile, setIsModalProfile] = useState(false);
+  const [isModalImage, setIsModalImage] = useState(false);
+  const [image, setImage] = useState(null);
 
   const handleUploadBanner = (event) => {
     if (event.target.files.length > 0) {
@@ -78,6 +83,34 @@ const Home = () => {
     });
   };
 
+  const handleCloseImage = () => {
+    setIsModalImage(false);
+    setImage(null);
+  };
+
+  const handleOpenImage = (data) => {
+    setIsModalImage(true);
+    setImage(data);
+  };
+
+  const handleImageAsProfile = () => {
+    dispatch(imageAsProfile({ id: image.id })).then(() => {
+      setIsModalImage(false);
+      setImage(null);
+      dispatch(getDataUser());
+    });
+  };
+
+  const handleImageDelete = () => {
+    dispatch(imageDelete(image.id))
+      .then(() => {
+        setIsModalImage(false);
+        setImage(null);
+        dispatch(getDataUser());
+      })
+      .catch((err) => console.log(err));
+  };
+
   useEffect(() => {
     dispatch(getDataUser()).catch((err) => console.log(err));
   }, [dispatch]);
@@ -97,7 +130,11 @@ const Home = () => {
       <div className="mt-10 md:mt-10 md:grid grid-cols-3 gap-x-5 px-5 ">
         <Profile data={user} handleEdit={handleOpenProfile} />
         <div className="col-span-2 grid grid-rows-none md:px-5 md:border-l-2 md:border-gray-200">
-          <Galery data={user} />
+          <Galery
+            data={user}
+            handleUpload={handleUploadProfile}
+            handleOpenImage={handleOpenImage}
+          />
           <div className="md:grid grid-cols-2 my-5">
             <Experience data={user} handleEdit={handleOpenExperience} />
             <Education data={user} handleEdit={handleOpenEducation} />
@@ -119,6 +156,13 @@ const Home = () => {
         handleClose={handleCloseProfile}
         handleEdit={handleEditProfile}
         data={user}
+      />
+      <ModalImage
+        isOpen={isModalImage}
+        handleClose={handleCloseImage}
+        data={image}
+        handleAsProfile={handleImageAsProfile}
+        handleDelete={handleImageDelete}
       />
     </div>
   );

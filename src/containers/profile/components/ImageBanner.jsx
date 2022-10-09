@@ -1,5 +1,5 @@
 import React from "react";
-import { DocumentAddIcon, PencilIcon } from "@heroicons/react/solid";
+import { PencilIcon } from "@heroicons/react/solid";
 
 export const ImageBanner = ({
   data,
@@ -45,19 +45,21 @@ export const ImageBanner = ({
             className="bg-gray-200 h-24 w-24 rounded-full object-cover md:h-48 md:w-48"
           />
         )}
-        <label
-          htmlFor="profile"
-          className=" bg-white rounded-full p-1 absolute right-3 top-3 md:right-7 md:top-7 cursor-pointer hover:bg-blue-200"
-        >
-          <DocumentAddIcon className="h-4 w-4 text-gray-500" />
-          <input
-            type="file"
-            id="profile"
-            className="hidden"
-            accept="image/png, image/gif, image/jpeg"
-            onChange={handleUploadProfile}
-          />
-        </label>
+        {!data?.user_picture && (
+          <label
+            htmlFor="profile"
+            className=" bg-white rounded-full p-1 absolute right-3 top-3 md:right-7 md:top-7 cursor-pointer hover:bg-blue-200"
+          >
+            <PencilIcon className="h-4 w-4 text-gray-500" />
+            <input
+              type="file"
+              id="profile"
+              className="hidden"
+              accept="image/png, image/gif, image/jpeg"
+              onChange={handleUploadProfile}
+            />
+          </label>
+        )}
       </div>
     </div>
   );

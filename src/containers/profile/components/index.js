@@ -5,3 +5,4 @@ export * from "./Experience";
 export * from "./Education";
 export * from "./ModalEditExperience";
 export * from "./ModalEditEducation";
+export * from "./ModalImage";
