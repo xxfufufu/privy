@@ -1,6 +1,7 @@
 import { authActionType } from "../actionTypes";
 
 const initState = {
+  initLoading: true,
   isLoading: false,
   register: false,
   userRegister: null,
@@ -68,11 +69,13 @@ const auth = (state = initState, action) => {
         ...state,
         isLoading: false,
         user: action.payload,
+        initLoading: false,
       };
     case authActionType.FETCH_USER_FAILED:
       return {
         ...state,
         isLoading: false,
+        initLoading: false,
       };
 
     default:

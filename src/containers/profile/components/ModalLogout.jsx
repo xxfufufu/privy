@@ -2,13 +2,7 @@
 import React from "react";
 import Modal from "react-modal";
 
-export const ModalImage = ({
-  handleClose,
-  handleAsProfile,
-  handleDelete,
-  isOpen,
-  data,
-}) => {
+export const ModalLogout = ({ handleClose, handleConfirm, isOpen, data }) => {
   const customStyles = {
     content: {
       top: "50%",
@@ -17,7 +11,7 @@ export const ModalImage = ({
       bottom: "auto",
       marginRight: "-50%",
       transform: "translate(-50%, -50%)",
-      zIndex: 999,
+      zIndex: 99,
       width: "100%",
       maxWidth: "500px",
     },
@@ -54,30 +48,25 @@ export const ModalImage = ({
           <span className="sr-only">Close modal</span>
         </button>
         <div className="p-6">
-          <div className="flex justify-center bg-slate-100 my-3 rounded-lg">
-            <img
-              src={data?.picture?.url}
-              alt="preview"
-              className="h-56 object-contain"
-            />
-          </div>
-
+          <h3 className=" text-center mb-5 text-2xl font-bold text-gray-500 dark:text-gray-400">
+            Are you sure to logout?
+          </h3>
           <div className="flex justify-end">
             <button
-              onClick={handleDelete}
+              onClick={handleClose}
               data-modal-toggle="popup-modal"
               type="button"
               className="text-white mr-3 bg-red-400 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center"
             >
-              Delete
+              Cancel
             </button>
             <button
-              onClick={handleAsProfile}
+              onClick={handleConfirm}
               data-modal-toggle="popup-modal"
               type="button"
               className="text-white  bg-blue-400 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
             >
-              Set as profile
+              Continue
             </button>
           </div>
         </div>

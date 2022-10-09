@@ -14,38 +14,83 @@ import {
   ImageBanner,
   Profile,
   Galery,
+  ModalEditProfile,
   Experience,
   Education,
   ModalExperience,
   ModalEducation,
   ModalImage,
+  ModalLogout,
 } from "./components";
 import { CogIcon } from "@heroicons/react/solid";
-import { ModalEditProfile } from "./components/ModalEditProfile";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Home = () => {
+  let toastId;
   const dispatch = useDispatch();
-  const { user, isLoading } = useSelector((state) => state.auth);
+  const { user, initLoading } = useSelector((state) => state.auth);
 
   const [isModalExperience, setIsModalExperience] = useState(false);
   const [isModalEducation, setIsModalEducation] = useState(false);
   const [isModalProfile, setIsModalProfile] = useState(false);
   const [isModalImage, setIsModalImage] = useState(false);
+  const [isModalLogout, setIsModalLogout] = useState(false);
   const [image, setImage] = useState(null);
 
   const handleUploadBanner = (event) => {
+    toastId = toast.loading("Loading...", {
+      position: "top-center",
+    });
     if (event.target.files.length > 0) {
       const formData = new FormData();
       formData.append("image", event.target.files[0]);
-      dispatch(uploadImageBanner(formData)).catch((err) => console.log(err));
+      dispatch(uploadImageBanner(formData))
+        .then(() => {
+          dispatch(getDataUser());
+          toast.update(toastId, {
+            type: "success",
+            isLoading: false,
+            render: "Success!",
+            autoClose: 3000,
+          });
+        })
+        .catch((err) =>
+          toast.update(toastId, {
+            type: "error",
+            isLoading: false,
+            render: err,
+            autoClose: 3000,
+          })
+        );
     }
   };
 
   const handleUploadProfile = (event) => {
+    toastId = toast.loading("Loading...", {
+      position: "top-center",
+    });
     if (event.target.files.length > 0) {
       const formData = new FormData();
       formData.append("image", event.target.files[0]);
-      dispatch(uploadImageProfile(formData)).catch((err) => console.log(err));
+      dispatch(uploadImageProfile(formData))
+        .then(() => {
+          dispatch(getDataUser());
+          toast.update(toastId, {
+            type: "success",
+            isLoading: false,
+            render: "Success!",
+            autoClose: 3000,
+          });
+        })
+        .catch((err) =>
+          toast.update(toastId, {
+            type: "error",
+            isLoading: false,
+            render: err,
+            autoClose: 3000,
+          })
+        );
     }
   };
 
@@ -54,10 +99,28 @@ const Home = () => {
   const handleOpenExperience = () => setIsModalExperience(true);
 
   const handleEditExperience = (data) => {
-    dispatch(editExperienceUser(data)).then(() => {
-      setIsModalExperience(false);
-      dispatch(getDataUser());
+    toastId = toast.loading("Loading...", {
+      position: "top-center",
     });
+    dispatch(editExperienceUser(data))
+      .then(() => {
+        setIsModalExperience(false);
+        dispatch(getDataUser());
+        toast.update(toastId, {
+          type: "success",
+          isLoading: false,
+          render: "Success!",
+          autoClose: 3000,
+        });
+      })
+      .catch((err) =>
+        toast.update(toastId, {
+          type: "error",
+          isLoading: false,
+          render: err,
+          autoClose: 3000,
+        })
+      );
   };
 
   const handleCloseEducation = () => setIsModalEducation(false);
@@ -65,10 +128,28 @@ const Home = () => {
   const handleOpenEducation = () => setIsModalEducation(true);
 
   const handleEditEducation = (data) => {
-    dispatch(editEducationUser(data)).then(() => {
-      setIsModalEducation(false);
-      dispatch(getDataUser());
+    toastId = toast.loading("Loading...", {
+      position: "top-center",
     });
+    dispatch(editEducationUser(data))
+      .then(() => {
+        setIsModalEducation(false);
+        dispatch(getDataUser());
+        toast.update(toastId, {
+          type: "success",
+          isLoading: false,
+          render: "Success!",
+          autoClose: 3000,
+        });
+      })
+      .catch((err) =>
+        toast.update(toastId, {
+          type: "error",
+          isLoading: false,
+          render: err,
+          autoClose: 3000,
+        })
+      );
   };
 
   const handleCloseProfile = () => setIsModalProfile(false);
@@ -76,11 +157,29 @@ const Home = () => {
   const handleOpenProfile = () => setIsModalProfile(true);
 
   const handleEditProfile = (data) => {
-    data["gender"] = data.gender === "male" ? 0 : 1;
-    dispatch(editProfileUser(data)).then(() => {
-      setIsModalProfile(false);
-      dispatch(getDataUser());
+    toastId = toast.loading("Loading...", {
+      position: "top-center",
     });
+    data["gender"] = data.gender === "male" ? 0 : 1;
+    dispatch(editProfileUser(data))
+      .then(() => {
+        setIsModalProfile(false);
+        dispatch(getDataUser());
+        toast.update(toastId, {
+          type: "success",
+          isLoading: false,
+          render: "Success!",
+          autoClose: 3000,
+        });
+      })
+      .catch((err) =>
+        toast.update(toastId, {
+          type: "error",
+          isLoading: false,
+          render: err,
+          autoClose: 3000,
+        })
+      );
   };
 
   const handleCloseImage = () => {
@@ -94,32 +193,79 @@ const Home = () => {
   };
 
   const handleImageAsProfile = () => {
-    dispatch(imageAsProfile({ id: image.id })).then(() => {
-      setIsModalImage(false);
-      setImage(null);
-      dispatch(getDataUser());
+    toastId = toast.loading("Loading...", {
+      position: "top-center",
     });
+    dispatch(imageAsProfile({ id: image.id }))
+      .then(() => {
+        setIsModalImage(false);
+        setImage(null);
+        dispatch(getDataUser());
+        toast.update(toastId, {
+          type: "success",
+          isLoading: false,
+          render: "Success!",
+          autoClose: 3000,
+        });
+      })
+      .catch((err) =>
+        toast.update(toastId, {
+          type: "error",
+          isLoading: false,
+          render: err,
+          autoClose: 3000,
+        })
+      );
   };
 
   const handleImageDelete = () => {
+    toastId = toast.loading("Loading...", {
+      position: "top-center",
+    });
     dispatch(imageDelete(image.id))
       .then(() => {
         setIsModalImage(false);
         setImage(null);
         dispatch(getDataUser());
+        toast.update(toastId, {
+          type: "success",
+          isLoading: false,
+          render: "Success!",
+          autoClose: 3000,
+        });
       })
-      .catch((err) => console.log(err));
+      .catch((err) =>
+        toast.update(toastId, {
+          type: "error",
+          isLoading: false,
+          render: err,
+          autoClose: 3000,
+        })
+      );
+  };
+
+  const handleOpenLogout = () => setIsModalLogout(true);
+
+  const handleCloseLogout = () => setIsModalLogout(false);
+
+  const handleLogout = () => {
+    window.localStorage.removeItem("token");
+    window.location.reload();
   };
 
   useEffect(() => {
     dispatch(getDataUser()).catch((err) => console.log(err));
   }, [dispatch]);
 
-  return isLoading ? (
+  return initLoading ? (
     <p>loading....</p>
   ) : (
     <div className=" max-w-7xl m-auto">
-      <div className="fixed z-10 m-5 p-1 rounded-full bg-slate-100">
+      <ToastContainer />
+      <div
+        className="fixed z-10 m-5 p-1 rounded-full bg-slate-100 cursor-pointer hover:bg-red-300"
+        onClick={handleOpenLogout}
+      >
         <CogIcon className="w-4 h-4 md:w-6 md:h-6" />
       </div>
       <ImageBanner
@@ -163,6 +309,11 @@ const Home = () => {
         data={image}
         handleAsProfile={handleImageAsProfile}
         handleDelete={handleImageDelete}
+      />
+      <ModalLogout
+        isOpen={isModalLogout}
+        handleClose={handleCloseLogout}
+        handleConfirm={handleLogout}
       />
     </div>
   );
