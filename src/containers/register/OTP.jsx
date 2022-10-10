@@ -2,13 +2,15 @@ import React, { useState, useCallback } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { matchOTP, requestOTP } from "../../store/action/auth.action";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Index = () => {
+  let toastId;
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [otp, setOtp] = useState({ otp1: "", otp2: "", otp3: "", otp4: "" });
   const { auth } = useSelector((state) => state);
-  console.log(auth);
 
   const handleReqOTP = () => {
     dispatch(requestOTP({ phone: auth.userRegister.phone })).catch((err) =>
@@ -22,8 +24,23 @@ const Index = () => {
         otp_code: `${otp.otp1}${otp.otp2}${otp.otp3}${otp.otp4}`,
       })
     )
-      .then(() => navigate("/"))
-      .catch((err) => console.log(err));
+      .then(() => {
+        navigate("/");
+        toast.update(toastId, {
+          type: "success",
+          isLoading: false,
+          render: "Success register!",
+          autoClose: 3000,
+        });
+      })
+      .catch((err) =>
+        toast.update(toastId, {
+          type: "error",
+          isLoading: false,
+          render: err,
+          autoClose: 3000,
+        })
+      );
   };
 
   const handleChange = (event, state) => {
@@ -58,6 +75,7 @@ const Index = () => {
 
   return (
     <div className="w-screen h-screen flex justify-center items-center">
+      <ToastContainer />
       <div className="w-1/3 border p-7 bg-slate-200 rounded-md ">
         <h1 className="text-2xl font-semibold text-center mb-7">
           Percobaan OTP

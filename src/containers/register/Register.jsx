@@ -4,6 +4,8 @@ import { InputField } from "../../components/InputField";
 import { useDispatch } from "react-redux";
 import { registerUser } from "../../store/action/auth.action";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
@@ -13,6 +15,7 @@ const RegisterPage = () => {
     formState: { errors },
   } = useForm();
   const dispatch = useDispatch();
+  let toastId;
 
   const [position, setPosition] = useState(null);
 
@@ -20,10 +23,27 @@ const RegisterPage = () => {
     data["device_token"] = null;
     data["latlong"] = `${position?.lat},${position?.long}`;
     data["device_type"] = 2;
-
+    toastId = toast.loading("Loading...", {
+      position: "top-center",
+    });
     dispatch(registerUser(data))
-      .then((res) => navigate("/register/otp"))
-      .catch((err) => console.log(err));
+      .then((res) => {
+        navigate("/register/otp");
+        toast.update(toastId, {
+          type: "success",
+          isLoading: false,
+          render: "Success, please check your otp",
+          autoClose: 3000,
+        });
+      })
+      .catch((err) =>
+        toast.update(toastId, {
+          type: "error",
+          isLoading: false,
+          render: err,
+          autoClose: 3000,
+        })
+      );
   };
   useEffect(() => {
     if (navigator.geolocation) {
@@ -35,6 +55,7 @@ const RegisterPage = () => {
 
   return (
     <section className="w-screen h-screen flex justify-center items-center">
+      <ToastContainer />
       <form
         onSubmit={handleSubmit(onSubmit)}
         className=" w-1/3 border p-7 bg-slate-200 rounded-md"

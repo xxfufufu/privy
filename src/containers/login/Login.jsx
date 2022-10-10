@@ -4,6 +4,8 @@ import { InputField } from "../../components/InputField";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../store/action/auth.action";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const LoginPage = () => {
   const {
@@ -13,16 +15,35 @@ const LoginPage = () => {
   } = useForm();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  let toastId;
 
   const [position, setPosition] = useState(null);
 
   const onSubmit = (data) => {
+    toastId = toast.loading("Loading...", {
+      position: "top-center",
+    });
     data["device_token"] = null;
     data["latlong"] = `${position?.lat},${position?.long}`;
     data["device_type"] = 2;
     dispatch(loginUser(data))
-      .then(() => navigate("/"))
-      .catch((err) => console.log(err));
+      .then(() => {
+        navigate("/");
+        toast.update(toastId, {
+          type: "success",
+          isLoading: false,
+          render: "Success!",
+          autoClose: 3000,
+        });
+      })
+      .catch((err) =>
+        toast.update(toastId, {
+          type: "error",
+          isLoading: false,
+          render: err,
+          autoClose: 3000,
+        })
+      );
   };
 
   useEffect(() => {
@@ -35,6 +56,7 @@ const LoginPage = () => {
 
   return (
     <section className="w-screen h-screen flex justify-center items-center">
+      <ToastContainer />
       <form
         onSubmit={handleSubmit(onSubmit)}
         className=" w-1/3 border p-7 bg-slate-200 rounded-md"
