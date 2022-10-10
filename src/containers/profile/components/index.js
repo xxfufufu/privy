@@ -8,3 +8,4 @@ export * from "./ModalEditEducation";
 export * from "./ModalEditProfile";
 export * from "./ModalImage";
 export * from "./ModalLogout";
+export * from "./ModalMessage";

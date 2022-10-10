@@ -21,21 +21,25 @@ import {
   ModalEducation,
   ModalImage,
   ModalLogout,
+  ModalMessage,
 } from "./components";
-import { CogIcon } from "@heroicons/react/solid";
+import { CogIcon, MailIcon } from "@heroicons/react/solid";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { fetchMessage } from "../../store/action/message.action";
 
 const Home = () => {
   let toastId;
   const dispatch = useDispatch();
   const { user, initLoading } = useSelector((state) => state.auth);
+  const { message } = useSelector((state) => state.message);
 
   const [isModalExperience, setIsModalExperience] = useState(false);
   const [isModalEducation, setIsModalEducation] = useState(false);
   const [isModalProfile, setIsModalProfile] = useState(false);
   const [isModalImage, setIsModalImage] = useState(false);
   const [isModalLogout, setIsModalLogout] = useState(false);
+  const [isModalMessage, setIsModalMessage] = useState(false);
   const [image, setImage] = useState(null);
 
   const handleUploadBanner = (event) => {
@@ -253,6 +257,47 @@ const Home = () => {
     window.location.reload();
   };
 
+  const handleCloseMessage = () => setIsModalLogout(false);
+
+  const handleGetMessage = () => {
+    toastId = toast.loading("Loading...", {
+      position: "top-center",
+    });
+    dispatch(fetchMessage(user.id))
+      .then(() => {
+        setIsModalMessage(true);
+        toast.update(toastId, {
+          type: "success",
+          isLoading: false,
+          render: "Success!",
+          autoClose: 3000,
+        });
+      })
+      .catch((err) =>
+        toast.update(toastId, {
+          type: "error",
+          isLoading: false,
+          render: err,
+          autoClose: 3000,
+        })
+      );
+  };
+
+  // useEffect(() => {
+  //   const ws = new WebSocket("ws://localhost:3000/ws");
+  //   ws.onopen = () => {
+  //     console.log("ws connected");
+  //   };
+  //   ws.onmessage = (mess) => {
+  //     console.log("message");
+  //   };
+  //   return () => {
+  //     ws.onclose = () => {
+  //       console.log("ws disconect");
+  //     };
+  //   };
+  // }, []);
+
   useEffect(() => {
     dispatch(getDataUser()).catch((err) => console.log(err));
   }, [dispatch]);
@@ -262,12 +307,21 @@ const Home = () => {
   ) : (
     <div className=" max-w-7xl m-auto">
       <ToastContainer />
-      <div
-        className="fixed z-10 m-5 p-1 rounded-full bg-slate-100 cursor-pointer hover:bg-red-300"
-        onClick={handleOpenLogout}
-      >
-        <CogIcon className="w-4 h-4 md:w-6 md:h-6" />
+      <div className="fixed z-30 m-5">
+        <div
+          className=" p-1 rounded-full bg-slate-100 cursor-pointer hover:bg-red-300"
+          onClick={handleOpenLogout}
+        >
+          <CogIcon className="w-4 h-4 md:w-6 md:h-6" />
+        </div>
+        <div
+          className="mt-3 p-1 rounded-full bg-slate-100 cursor-pointer hover:bg-red-300"
+          onClick={handleGetMessage}
+        >
+          <MailIcon className="w-4 h-4 md:w-6 md:h-6" />
+        </div>
       </div>
+
       <ImageBanner
         data={user}
         handleUploadBanner={handleUploadBanner}
@@ -314,6 +368,11 @@ const Home = () => {
         isOpen={isModalLogout}
         handleClose={handleCloseLogout}
         handleConfirm={handleLogout}
+      />
+      <ModalMessage
+        isOpen={isModalMessage}
+        handleClose={handleCloseMessage}
+        data={message}
       />
     </div>
   );

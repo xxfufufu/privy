@@ -6,7 +6,6 @@ export const ImageBanner = ({
   handleUploadBanner,
   handleUploadProfile,
 }) => {
-  console.log("data", data);
   return (
     <div className="relative">
       <label
