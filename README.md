@@ -6,7 +6,7 @@
 - **React.js**, sebagai framework utama.
 - **Tailwind**, sebagai framework CSS.
 - **npm**, sebagai package manager.
-- **Rdux**, sebagai state management.
+- **Redux**, sebagai state management.
 
 ## Menjalankan Project di Lokal
 
